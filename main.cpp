@@ -6,7 +6,7 @@
 using namespace std;
 
 #define debug cout<<123<<endl;
-const int Hash=3;  //just 103 files I dont want too many
+const int Hash=20;  //just 103 files I dont want too many
 //but now just for easy I simplify it
 int getHash(const string &s); //get hash number
 
