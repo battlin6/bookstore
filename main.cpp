@@ -125,13 +125,13 @@ void Create_User() {
 
     out.open("nowUser",ios::binary|ios::out);
     if(!out){cerr<<"Create_User error";exit(0);};
-    out.write(reinterpret_cast<char*>(&root),sizeof(root));
+    out.write((char*)(&root),sizeof(root));
     out.close();
 
     ofstream out2;
     out2.open("User",ios::binary|ios::out);
-    if(!out){cerr<<"Create_User error";exit(0);};
-    out2.write(reinterpret_cast<char*>(&root),sizeof(root));
+    if(!out2){cerr<<"Create_User error";exit(0);};
+    out2.write((char*)(&root),sizeof(root));
     out2.close();
 }
 void Create_Book() {
@@ -146,9 +146,9 @@ void Create_Selete() {
     if(!out){cerr<<"Create_Select error"<<endl; exit(0);}
     NowPage=0,NowPos=-1;
     out.seekp(0);
-    out.write(reinterpret_cast<char*>(&NowPage),sizeof(NowPage));
-    out.write(reinterpret_cast<char*>(&NowPos),sizeof(NowPos));
-    out.write(reinterpret_cast<char*>(&NowBook),sizeof(NowBook));
+    out.write((char*)(&NowPage),sizeof(NowPage));
+    out.write((char*)(&NowPos),sizeof(NowPos));
+    out.write((char*)(&NowBook),sizeof(NowBook));
     out.close();
 }
 void Create_Bill() {
@@ -156,9 +156,9 @@ void Create_Bill() {
     int tmp1=0;  //the times is 0
     double tmp2=0; //the first in and out is double(0)
     out.seekp(0);
-    out.write(reinterpret_cast<char*>(&tmp1),sizeof(tmp1));
-    out.write(reinterpret_cast<char*>(&tmp2),sizeof(tmp2));
-    out.write(reinterpret_cast<char*>(&tmp2),sizeof(tmp2));
+    out.write((char*)(&tmp1),sizeof(tmp1));
+    out.write((char*)(&tmp2),sizeof(tmp2));
+    out.write((char*)(&tmp2),sizeof(tmp2));
     out.close();
 }
 int getHash(const string &s) {
@@ -326,7 +326,7 @@ int getnowPerm() {
     in.open("nowUser",ios::binary|ios::in|ios::out);
     if(!in){cerr<<"getnowPerm error"<<endl; exit(0);}
     in.seekg(0);
-    in.read(reinterpret_cast<char*>(&U),sizeof(U));
+    in.read((char*)(&U),sizeof(U));
     in.close();
     int tmp=U.getPerm();
     return tmp;
@@ -339,13 +339,13 @@ void Login(const string &Id,const string &Passwd) {
     if(!in){cerr<<"Login error"<<endl; exit(0);}
     User U;
     bool flag=false;
-    in.read(reinterpret_cast<char*>(&U),sizeof(U));
+    in.read((char*)(&U),sizeof(U));
     while(!in.eof()){
         if(U.getOK()&&U.Check_Id(Id.c_str())&&(Perm==7||U.Check_Passwd(Passwd.c_str()))){
             flag=true;
             break;
         }
-        in.read(reinterpret_cast<char*>(&U),sizeof(U));
+        in.read((char*)(&U),sizeof(U));
     }
     in.close();
     if(flag)
@@ -357,7 +357,7 @@ void ResetLogin(User U) {
     fstream io("nowUser",ios::binary|ios::in|ios::out);
     if(!io){cerr<<"ResetLogin error"<<endl; exit(0);}
     io.seekp(0);
-    io.write(reinterpret_cast<char*>(&U),sizeof(U));
+    io.write((char*)(&U),sizeof(U));
     io.close();
 }
 void Delete(const string &s) {
@@ -368,17 +368,17 @@ void Delete(const string &s) {
     User U;
     int pos=0;
     bool flag=false;
-    io.read(reinterpret_cast<char*>(&U),sizeof(U));
+    io.read((char*)(&U),sizeof(U));
     while(!io.eof()){
         if(U.getOK()&&U.Check_Id(s.c_str())){
             U.Delete();
             flag=true;
             io.seekg(pos*sizeof(U));
-            io.write(reinterpret_cast<char*>(&U),sizeof(U));
+            io.write((char*)(&U),sizeof(U));
             break;
         }
         pos++;
-        io.read(reinterpret_cast<char*>(&U),sizeof(U));
+        io.read((char*)(&U),sizeof(U));
     }
     io.close();
     if(flag) return;
@@ -389,13 +389,13 @@ bool OKId(const string &s) {
     if(!in){cerr<<"OKId error"<<endl; exit(0);}
     in.seekg(0);
     User U;
-    in.read(reinterpret_cast<char*>(&U),sizeof(U));
+    in.read((char*)(&U),sizeof(U));
     while(!in.eof()){
         if(U.getOK()&&U.Check_Id(s.c_str())){
             //cerr<<1<<endl;
             return true;
         }
-        in.read(reinterpret_cast<char*>(&U),sizeof(U));
+        in.read((char*)(&U),sizeof(U));
     }
     return false;
 }
@@ -403,7 +403,7 @@ void AddUser(User U) {
     ofstream out("User",ios::binary|ios::out|ios::app);
     if(!out){cerr<<"AddUser error"<<endl; exit(0);}
     out.seekp(0,ios::end);
-    out.write(reinterpret_cast<char*>(&U),sizeof(U));
+    out.write((char*)(&U),sizeof(U));
     out.close();
 }
 void ChangePasswdroot(const string &Id, const string &Passwd) {
@@ -412,17 +412,17 @@ void ChangePasswdroot(const string &Id, const string &Passwd) {
     User U;
     bool flag=false;
     io.seekg(0);
-    io.read(reinterpret_cast<char*>(&U),sizeof(U));
+    io.read((char*)(&U),sizeof(U));
     int pos=0;
     while(!io.eof()){
         if(U.getOK()&&U.Check_Id(Id.c_str())){
             U.Change_Passwd(Passwd.c_str());
             io.seekp(pos*sizeof(U));
-            io.write(reinterpret_cast<char*>(&U),sizeof(U));
+            io.write((char*)(&U),sizeof(U));
             flag=true;
             break;
         }
-        io.read(reinterpret_cast<char*>(&U),sizeof(U));
+        io.read((char*)(&U),sizeof(U));
         pos++;
     }
     io.close();
@@ -435,7 +435,7 @@ void ChangePasswd(const string &Id, const string &OldPasswd, const string &NewPa
     User U;
     bool flag=false;
     io.seekg(0);
-    io.read(reinterpret_cast<char*>(&U),sizeof(U));
+    io.read((char*)(&U),sizeof(U));
     int pos=0;
     while(!io.eof()){
         if(U.getOK()&&U.Check_Id(Id.c_str())){
@@ -447,7 +447,7 @@ void ChangePasswd(const string &Id, const string &OldPasswd, const string &NewPa
             }
             break;
         }
-        io.read(reinterpret_cast<char*>(&U),sizeof(U));
+        io.read((char*)(&U),sizeof(U));
         pos++;
     }
     io.close();
@@ -460,14 +460,14 @@ void Select(const string &s) {
     if(!io){cerr<<"Select error"<<endl; exit(0);}
     bool flag=false;
     Book B;
-    io.read(reinterpret_cast<char*>(&B),sizeof(B));
+    io.read((char*)(&B),sizeof(B));
     while(!io.eof()){
         if(B.getOK()&&B.Check_ISBN(s.c_str())){
             flag=true;
             break;
         }
         NowPos+=sizeof(B);
-        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        io.read((char*)(&B),sizeof(B));
     }
     if(flag)
         NowBook=B;
@@ -475,7 +475,7 @@ void Select(const string &s) {
         Book tmp(s.c_str());
         NowBook=tmp;
         io.seekp(NowPos);
-        io.write(reinterpret_cast<char*>(&tmp),sizeof(tmp));
+        io.write((char*)(&tmp),sizeof(tmp));
     }
     io.close();
     DoSelect();
@@ -484,9 +484,9 @@ void DoSelect() {
     fstream io("nowSelect",ios::binary|ios::in|ios::out);
     if(!io){cerr<<"DoSelect error"<<endl; exit(0);}
     io.seekp(0);
-    io.write(reinterpret_cast<char*>(&NowPage),sizeof(NowPage));
-    io.write(reinterpret_cast<char*>(&NowPos),sizeof(NowPos));
-    io.write(reinterpret_cast<char*>(&NowBook),sizeof(NowBook));
+    io.write((char*)(&NowPage),sizeof(NowPage));
+    io.write((char*)(&NowPos),sizeof(NowPos));
+    io.write((char*)(&NowBook),sizeof(NowBook));
     io.close();
 }
 Info getInfo(const string &s) {
@@ -514,9 +514,9 @@ void NonSelect() {
     fstream io("nowSelect",ios::binary|ios::in|ios::out);
     if(!io){cerr<<"NonSelect error"<<endl; exit(0);}
     io.seekg(0);
-    io.read(reinterpret_cast<char*>(&NowPage),sizeof(NowPage));
-    io.read(reinterpret_cast<char*>(&NowPos),sizeof(NowPos));
-    io.read(reinterpret_cast<char*>(&NowBook),sizeof(NowBook));
+    io.read((char*)(&NowPage),sizeof(NowPage));
+    io.read((char*)(&NowPos),sizeof(NowPos));
+    io.read((char*)(&NowBook),sizeof(NowBook));
     io.close();
 }
 void Modify1(const int &cas,const string &s){
@@ -566,11 +566,11 @@ bool OKISBN(const string &s) {
     fstream io("Books"+to_string(NowPage),ios::binary|ios::in|ios::out);
     if(!io){cerr<<"OKISBN error"<<endl; exit(0);}
     Book B;
-    io.read(reinterpret_cast<char*>(&B),sizeof(B));
+    io.read((char*)(&B),sizeof(B));
     while(!io.eof()){
         if(B.getOK()&&B.Check_ISBN(s.c_str()))
             return true;
-        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        io.read((char*)(&B),sizeof(B));
     }
     io.close();
     return false;
@@ -578,7 +578,7 @@ bool OKISBN(const string &s) {
 void UpdateBook(Book B) {
     fstream io("Books"+to_string(NowPage),ios::binary|ios::in|ios::out);
     io.seekp(NowPos);
-    io.write(reinterpret_cast<char*>(&B),sizeof(B));
+    io.write((char*)(&B),sizeof(B));
     io.close();
 }
 void ImportBook(const string &s) {
@@ -586,19 +586,19 @@ void ImportBook(const string &s) {
     fstream io("Bill",ios::binary|ios::in|ios::out);
     io.seekg(0);
     int sum;
-    io.read(reinterpret_cast<char*>(&sum),sizeof(sum));
+    io.read((char*)(&sum),sizeof(sum));
     sum++;
     io.seekp(0);
     io.write((char*)(&sum),sizeof(sum));
     io.seekg(-16,ios::end);
-    io.read(reinterpret_cast<char*>(&in),sizeof(in));
-    io.read(reinterpret_cast<char*>(&out),sizeof(out));
+    io.read((char*)(&in),sizeof(in));
+    io.read((char*)(&out),sizeof(out));
     double sum1;
     sscanf(s.c_str(),"%lf",&sum1);
     out+=sum1;
     io.seekp(0,ios::end);
-    io.write(reinterpret_cast<char*>(&in),sizeof(in));
-    io.write(reinterpret_cast<char*>(&out),sizeof(out));
+    io.write((char*)(&in),sizeof(in));
+    io.write((char*)(&out),sizeof(out));
     io.close();
 }
 void OutportBook(double sum1) {
@@ -606,17 +606,17 @@ void OutportBook(double sum1) {
     fstream io("Bill",ios::binary|ios::in|ios::out);
     io.seekg(0);
     int sum;
-    io.read(reinterpret_cast<char*>(&sum),sizeof(sum));
+    io.read((char*)(&sum),sizeof(sum));
     sum++;
     io.seekp(0);
     io.write((char*)(&sum),sizeof(sum));
     io.seekg(-16,ios::end);
-    io.read(reinterpret_cast<char*>(&in),sizeof(in));
-    io.read(reinterpret_cast<char*>(&out),sizeof(out));
+    io.read((char*)(&in),sizeof(in));
+    io.read((char*)(&out),sizeof(out));
     in+=sum1;
     io.seekp(0,ios::end);
-    io.write(reinterpret_cast<char*>(&in),sizeof(in));
-    io.write(reinterpret_cast<char*>(&out),sizeof(out));
+    io.write((char*)(&in),sizeof(in));
+    io.write((char*)(&out),sizeof(out));
     io.close();
 }
 void ShowFinance() {
@@ -640,7 +640,7 @@ int gettotTime() {
     fstream io("Bill",ios::binary|ios::in|ios::out);
     int sum;
     io.seekg(0);
-    io.read(reinterpret_cast<char*>(&sum),sizeof(sum));
+    io.read((char*)(&sum),sizeof(sum));
     io.close();
     //cout<<sum<<endl;
     return sum;
@@ -649,8 +649,8 @@ pay getFinance(const int &k) {
     fstream io("Bill",ios::binary|ios::in|ios::out);
     io.seekg(sizeof(int)+2*sizeof(double)*k);
     double a,b;
-    io.read(reinterpret_cast<char*>(&a),sizeof(a));
-    io.read(reinterpret_cast<char*>(&b),sizeof(b));
+    io.read((char*)(&a),sizeof(a));
+    io.read((char*)(&b),sizeof(b));
     io.close();
     pay tmp;
     tmp.moneyin=a;
@@ -667,7 +667,7 @@ void ShowAll(){
         io.seekg(0);
         Book B;
         int pos=0;
-        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        io.read((char*)(&B),sizeof(B));
         while(!io.eof()){
             if(B.getOK()) {
                 Bookinfo tmp;
@@ -677,7 +677,7 @@ void ShowAll(){
                 A.push_back(tmp);
             }
                 pos+=sizeof(B);
-                io.read(reinterpret_cast<char*>(&B),sizeof(B));
+                io.read((char*)(&B),sizeof(B));
         }
         io.close();
     }
@@ -692,7 +692,7 @@ void ShowBook(const int &page, const int &pos) {
     if(!io){cout<<"ShowBook error"<<endl; exit(0);}
     io.seekg(pos);
     Book B;
-    io.read(reinterpret_cast<char*>(&B),sizeof(B));
+    io.read((char*)(&B),sizeof(B));
     B.show();
 }
 void Show1(const int &cas, const string &s) {
@@ -704,7 +704,7 @@ void Show1(const int &cas, const string &s) {
         io.seekg(0);
         Book B;
         int pos=0;
-        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        io.read((char*)(&B),sizeof(B));
         while(!io.eof()){
             if(B.getOK()) {
                 if(cas==int(NAME)&&B.Check_Name(s.c_str())){
@@ -730,7 +730,7 @@ void Show1(const int &cas, const string &s) {
                 }
             }
             pos+=sizeof(B);
-            io.read(reinterpret_cast<char*>(&B),sizeof(B));
+            io.read((char*)(&B),sizeof(B));
         }
         io.close();
     }
@@ -758,7 +758,7 @@ void Show2(const string &s) {
         io.seekg(0);
         Book B;
         int pos=0;
-        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        io.read((char*)(&B),sizeof(B));
         while(!io.eof()){
             //cout<<B.getISBN()<<endl;;
             //cout<<news<<endl;
@@ -773,7 +773,7 @@ void Show2(const string &s) {
                     A.push_back(tmp);
             }
             pos+=sizeof(B);
-            io.read(reinterpret_cast<char*>(&B),sizeof(B));
+            io.read((char*)(&B),sizeof(B));
         }
         io.close();
     }
@@ -793,13 +793,13 @@ void buy(const string &_ISBN, const string &_Quti) {
     int Quti=0;
     int pos=0;
     sscanf(_Quti.c_str(), "%d", &Quti);
-    io.read(reinterpret_cast<char*>(&B),sizeof(B));
+    io.read((char*)(&B),sizeof(B));
     while(!io.eof()){
         if(B.getOK()&&B.Check_ISBN(_ISBN.c_str())){
             flag=true;
             break;
         }
-        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        io.read((char*)(&B),sizeof(B));
         pos+= sizeof(B);
     }
     if(!flag)
@@ -808,7 +808,7 @@ void buy(const string &_ISBN, const string &_Quti) {
         if(B.Buy(Quti)){
             OutportBook(Quti*B.getPrice());
             io.seekg(pos);
-            io.write(reinterpret_cast<char*>(&B),sizeof(B));
+            io.write((char*)(&B),sizeof(B));
         }
         else printf("Invalid\n");
     }
