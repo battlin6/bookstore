@@ -72,6 +72,7 @@ bool cmp(const Bookinfo &a,const Bookinfo &b){
 void ShowBook(const int &page,const int &pos);
 void Show1(const int &cas,const string &s);
 void Show2(const string &s);
+void buy(const string &_ISBN,const string &_Quti);
 
 int main() {
     //Book B("asdasd","asdasd","asdada","asdad",123,0.1);
@@ -307,6 +308,12 @@ int todo(const string &s) {
             return 1;
         }
         return 3;
+    }
+    if(length==3&&test[0]=="buy"){
+        if(getnowPerm()!=1&&getnowPerm()!=3&&getnowPerm()!=7)
+            return 3;
+        buy(test[1],test[2]);
+        return 1;
     }
     return 3;
 }
@@ -612,7 +619,7 @@ void OutportBook(double sum1) {
 }
 void ShowFinance() {
     //cout<<123<<endl;
-    debug
+    //debug
     int nowtime=gettotTime();
     pay tmp=getFinance(nowtime);
     printf("+ %.2f - %.2f\n",tmp.moneyin,tmp.moneyout);
@@ -771,5 +778,36 @@ void Show2(const string &s) {
     sort(A.begin(),A.end(),cmp);
     for(auto const &i:A){
         ShowBook(i.page,i.pos);
+    }
+}
+
+void buy(const string &_ISBN, const string &_Quti) {
+    fstream io;
+    io.open("Books"+to_string(getHash(_ISBN)),ios::binary|ios::in|ios::out);
+    if(!io){cout<<"buy error"<<endl; exit(0);}
+    Book B;
+    bool flag=false;
+    io.seekg((0));
+    int Quti=0;
+    int pos=0;
+    sscanf(_Quti.c_str(), "%d", &Quti);
+    io.read(reinterpret_cast<char*>(&B),sizeof(B));
+    while(!io.eof()){
+        if(B.getOK()&&B.Check_ISBN(_ISBN.c_str())){
+            flag=true;
+            break;
+        }
+        io.read(reinterpret_cast<char*>(&B),sizeof(B));
+        pos+= sizeof(B);
+    }
+    if(!flag)
+        printf("Invalid\n");
+    else{
+        if(B.Buy(Quti)){
+            OutportBook(Quti*B.getPrice());
+            io.seekg(pos);
+            io.write(reinterpret_cast<char*>(&B),sizeof(B));
+        }
+        else printf("Invalid\n");
     }
 }
