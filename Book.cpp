@@ -5,6 +5,7 @@
 #include "Book.h"
 
 Book::Book(const char* s1,const char* s2,const char* s3,const char* s4,const int &s5,const double &s6) {
+    memset(this,0,sizeof(*this));
     Price=s6;
     Quti=s5;
     OK=true;
