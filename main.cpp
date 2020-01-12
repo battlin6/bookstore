@@ -106,7 +106,7 @@ void Create(){
 void Pre_work(){
 
 
-    Create(); //just for debug;
+    //Create(); //just for debug;
 
 
     fstream io;
@@ -114,6 +114,7 @@ void Pre_work(){
     if(!io){
         ofstream out;
         out.open("pre",ios::trunc|ios::binary); //clear the pre
+        Create();
         out.close();
     }
     io.close();
