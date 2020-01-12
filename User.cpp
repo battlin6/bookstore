@@ -8,6 +8,7 @@ using namespace std;
 
 
 User::User(const char* ID,const char* PASSWD,const int &l,const char *NAME) {
+    memset(this,0,sizeof(*this));
     OK=true;
     Perm=l;
     strcpy(Id,ID);
