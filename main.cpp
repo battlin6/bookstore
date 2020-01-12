@@ -127,10 +127,11 @@ void Create_User() {
     out.write(reinterpret_cast<char*>(&root),sizeof(root));
     out.close();
 
-    out.open("User",ios::binary|ios::out);
+    ofstream out2;
+    out2.open("User",ios::binary|ios::out);
     if(!out){cerr<<"Create_User error";exit(0);};
-    out.write(reinterpret_cast<char*>(&root),sizeof(root));
-    out.close();
+    out2.write(reinterpret_cast<char*>(&root),sizeof(root));
+    out2.close();
 }
 void Create_Book() {
     for(int i=0;i<Hash;++i){
