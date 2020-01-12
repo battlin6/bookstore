@@ -26,10 +26,10 @@ public:
     void ModifyName(const char *s);
     void ModifyAuthor(const char *s);
     void ModifyKeyword(const char *s);
-    void ModifyPrice();
+    void ModifyPrice(const char *s);
     void show();
     bool Buy(const int &s);
-    void AddBook();
+    void AddBook(const char*s);
     bool Check_ISBN(const char *s);
     bool Check_Name(const char *s);
     bool Check_Author(const char *s);
