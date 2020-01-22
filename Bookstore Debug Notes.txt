@@ -1,0 +1,22 @@
+ios::binary打不开
+
+string 定长 需要用char数组
+
+clion编码记得调回去（算了，UTF-8还是可以的）
+
+详细了解一下编码问题
+
+cmake的服务器版本
+
+难点：把ISBN改了之后，就不能重新放在原来那个文档中了，必须先取出来，再重新插入
+
+把Bill分成两个
+
+reinterpret_cast<char*>(&x) 注意取地址符号
+
+被短路求值给坑了
+if(length==2&&test[0]=="show"&&test[1]=="finance"){
+先判断length 否则会RE
+
+memory leak
+这个应该是valgrind的特性，需要在每次构造函数的时候需要memset(this,0,sizeof(*this)); 不然会误判
